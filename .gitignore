@@ -1,0 +1,5 @@
+result
+result-*
+secrets/*.age
+secrets/*.key
+!secrets/*.pub
