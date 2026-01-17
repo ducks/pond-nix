@@ -13,29 +13,24 @@
   # System configuration
   system.stateVersion = "24.05";
 
-  # Networking - CONFIGURE THIS BEFORE INSTALLING
-  # Get your VPS info by running vps-info.sh on current system
+  # Networking - Fornex VPS configuration
   networking = {
     hostName = "burrow";
 
-    # Option 1: DHCP (if Fornex supports it)
-    useDHCP = true;
-
-    # Option 2: Static IP (more reliable for VPS)
-    # Uncomment and fill in your values:
-    # useDHCP = false;
-    # interfaces.eth0 = {  # Or ens3, check with: ip addr
-    #   ipv4.addresses = [{
-    #     address = "YOUR.VPS.IP.HERE";
-    #     prefixLength = 24;
-    #   }];
-    # };
-    # defaultGateway = "YOUR.GATEWAY.HERE";
-    # nameservers = [ "8.8.8.8" "8.8.4.4" ];
+    # Static IP configuration for Fornex
+    useDHCP = false;
+    interfaces.eth0 = {
+      ipv4.addresses = [{
+        address = "199.68.196.244";
+        prefixLength = 24;
+      }];
+    };
+    defaultGateway = "199.68.196.1";
+    nameservers = [ "176.10.124.177" "176.10.124.136" ];
 
     firewall = {
       enable = true;
-      allowedTCPPorts = [ 22 80 443 ];  # SSH is critical!
+      allowedTCPPorts = [ 22 80 443 ];  # SSH, HTTP, HTTPS
     };
   };
 
@@ -44,11 +39,12 @@
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     openssh.authorizedKeys.keys = [
-      # CRITICAL: Add your SSH public key here before installing!
-      # Get it with: cat ~/.ssh/id_ed25519.pub (or id_rsa.pub)
-      # "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA... your-key"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH8FEc0PfweCqo5LrsMwo4XiCVaG+xMuA7ao33yTl/OR ducks@pond"
     ];
   };
+
+  # Sudo configuration
+  security.sudo.wheelNeedsPassword = false;  # Passwordless sudo for wheel group
 
   # SSH - CRITICAL FOR VPS ACCESS
   services.openssh = {
