@@ -15,7 +15,7 @@
 
   # Networking - Fornex VPS configuration
   networking = {
-    hostName = "burrow";
+    hostName = "pond";
 
     # Static IP configuration for Fornex
     useDHCP = false;
@@ -35,7 +35,7 @@
   };
 
   # Users
-  users.users.urho = {
+  users.users.ducks = {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     openssh.authorizedKeys.keys = [
