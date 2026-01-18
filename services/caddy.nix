@@ -5,37 +5,43 @@
     enable = true;
 
     virtualHosts = {
-      "git.example.com" = {
+      "code.jakegoldsborough.com" = {
         extraConfig = ''
           reverse_proxy localhost:3001
         '';
       };
 
-      "jg.example.com" = {
+      "stats.jakegoldsborough.com" = {
         extraConfig = ''
           reverse_proxy localhost:8080
         '';
       };
 
-      "dv.example.com" = {
+      "stats.date-ver.com" = {
         extraConfig = ''
           reverse_proxy localhost:8081
         '';
       };
 
-      "gv.example.com" = {
+      "stats.gnarlyvoid.com" = {
         extraConfig = ''
           reverse_proxy localhost:8082
         '';
       };
 
-      "ci.example.com" = {
+      "ci.jakegoldsborough.com" = {
         extraConfig = ''
           reverse_proxy localhost:8000
         '';
       };
 
-      "scrob.example.com" = {
+      "scrob.jakegoldsborough.com" = {
+        extraConfig = ''
+          reverse_proxy localhost:3002
+        '';
+      };
+
+      "ui.scrob.jakegoldsborough.com" = {
         extraConfig = ''
           reverse_proxy localhost:3000
         '';
