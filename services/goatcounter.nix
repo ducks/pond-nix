@@ -18,6 +18,7 @@ let
         ExecStart = "${goatcounter}/bin/goatcounter serve -listen localhost:${toString port} -tls none -db sqlite+${dbPath}";
         Restart = "always";
         Environment = "HOME=${workDir}";
+        StateDirectory = builtins.baseNameOf workDir;
 
         # Security hardening
         NoNewPrivileges = true;
