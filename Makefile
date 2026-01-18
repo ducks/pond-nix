@@ -12,9 +12,11 @@ help: ## Show this help message
 update-hash: ## Fetch and update scrob binary hash
 	@echo "Fetching scrob binary hash..."
 	@HASH=$$(nix-prefetch-url $(SCROB_URL) 2>/dev/null); \
+	echo "Got hash: $$HASH"; \
 	SRI=$$(nix-hash --type sha256 --to-sri $$HASH); \
+	echo "Converted to SRI: $$SRI"; \
 	sed -i "s|hash = \"sha256-[^\"]*\";|hash = \"$$SRI\";|" services/scrob.nix; \
-	echo "Updated scrob.nix with hash: $$SRI"
+	echo "Updated scrob.nix"
 
 backup: ## Backup current /etc/nixos configuration
 	@echo "Backing up /etc/nixos..."
