@@ -45,7 +45,9 @@ in {
     # Enable password authentication for scrob user
     authentication = pkgs.lib.mkOverride 10 ''
       local all all trust
+      local scrob scrob md5
       host scrob scrob 127.0.0.1/32 md5
+      host scrob scrob ::1/128 md5
       host all all 127.0.0.1/32 ident
       host all all ::1/128 ident
     '';
