@@ -76,12 +76,10 @@ in {
       RestartSec = "5";
     };
 
-    # Set password and run migrations before starting
+    # Set password before starting
     preStart = ''
       # Set scrob user password in PostgreSQL
       ${config.services.postgresql.package}/bin/psql -U postgres -c "ALTER USER scrob WITH PASSWORD 'scrob';" || true
-      # Run migrations
-      ${scrob}/bin/scrob migrate || true
     '';
   };
 
