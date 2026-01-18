@@ -3,6 +3,7 @@
 {
   # Import service modules
   imports = [
+    ./hardware-configuration.nix
     ./services/gitea.nix
     ./services/goatcounter.nix
     ./services/woodpecker.nix
@@ -13,13 +14,17 @@
   # System configuration
   system.stateVersion = "24.05";
 
+  # Boot loader
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/vda";
+
   # Networking - Fornex VPS configuration
   networking = {
     hostName = "pond";
 
     # Static IP configuration for Fornex
     useDHCP = false;
-    interfaces.eth0 = {
+    interfaces.ens3 = {
       ipv4.addresses = [{
         address = "199.68.196.244";
         prefixLength = 24;
