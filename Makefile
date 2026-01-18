@@ -15,7 +15,7 @@ update-hash: ## Fetch and update scrob binary hash
 	echo "Got hash: $$HASH"; \
 	SRI=$$(nix-hash --type sha256 --to-sri $$HASH); \
 	echo "Converted to SRI: $$SRI"; \
-	sed -i "s|hash = \"sha256-[^\"]*\";|hash = \"$$SRI\";|" services/scrob.nix; \
+	sed -i 's|hash = "[^"]*";|hash = "'"$$SRI"'";|' services/scrob.nix; \
 	echo "Updated scrob.nix"
 
 backup: ## Backup current /etc/nixos configuration
