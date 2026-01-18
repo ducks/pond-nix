@@ -12,7 +12,7 @@ help: ## Show this help message
 update-hash: ## Fetch and update scrob binary hash
 	@echo "Fetching scrob binary hash..."
 	@HASH=$$(nix-prefetch-url $(SCROB_URL) 2>/dev/null); \
-	SRI=$$(nix hash to-sri --type sha256 $$HASH); \
+	SRI=$$(nix-hash --type sha256 --to-sri $$HASH); \
 	sed -i "s|hash = \"sha256-[^\"]*\";|hash = \"$$SRI\";|" services/scrob.nix; \
 	echo "Updated scrob.nix with hash: $$SRI"
 
