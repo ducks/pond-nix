@@ -8,7 +8,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/ducks/scrob/releases/download/v${version}/scrob-linux-x86_64";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-I7+tZS/WQTf4ymqcI0w2fWcfpHDAagKvRjLFwwYgAWY=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
