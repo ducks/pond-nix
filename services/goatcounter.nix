@@ -22,9 +22,6 @@ let
         # Security hardening
         NoNewPrivileges = true;
         PrivateTmp = true;
-        ProtectSystem = "strict";
-        ProtectHome = true;
-        ReadWritePaths = [ workDir ];
       };
     };
   };
