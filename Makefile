@@ -27,15 +27,15 @@ copy: ## Copy configuration files to /etc/nixos
 	@sudo rsync -av --exclude='.git' --exclude='Makefile' --exclude='install.sh' --exclude='README.md' --exclude='scripts' ./ $(NIXOS_CONFIG)/
 	@echo "Files copied to $(NIXOS_CONFIG)"
 
-test: copy ## Test the NixOS configuration
+test: ## Test the NixOS configuration
 	@echo "Testing configuration..."
 	@sudo nixos-rebuild test
 
-switch: copy ## Apply the NixOS configuration
+switch: ## Apply the NixOS configuration
 	@echo "Applying configuration..."
 	@sudo nixos-rebuild switch
 
-install: update-hash backup test ## Full installation: update hash, backup, and test config
+install: update-hash backup copy test ## Full installation: update hash, backup, copy, and test config
 	@echo ""
 	@echo "Configuration test successful!"
 	@echo ""
