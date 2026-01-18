@@ -4,7 +4,7 @@ let
   goatcounter = pkgs.goatcounter;
 
   # Helper to create a GoatCounter instance
-  mkGoatCounterService = { name, port, domain, dbPath }: {
+  mkGoatCounterService = { name, port, workDir, dbPath }: {
     "goatcounter-${name}" = {
       description = "GoatCounter analytics (${name})";
       after = [ "network.target" ];
@@ -14,16 +14,17 @@ let
         Type = "simple";
         User = "goatcounter";
         Group = "goatcounter";
-        ExecStart = "${goatcounter}/bin/goatcounter serve -listen localhost:${toString port} -db ${dbPath} -domain ${domain}";
-        Restart = "on-failure";
-        RestartSec = "5s";
+        WorkingDirectory = workDir;
+        ExecStart = "${goatcounter}/bin/goatcounter serve -listen localhost:${toString port} -tls none -db sqlite+${dbPath}";
+        Restart = "always";
+        Environment = "HOME=${workDir}";
 
         # Security hardening
         NoNewPrivileges = true;
         PrivateTmp = true;
         ProtectSystem = "strict";
         ProtectHome = true;
-        ReadWritePaths = [ (builtins.dirOf dbPath) ];
+        ReadWritePaths = [ workDir ];
       };
     };
   };
@@ -43,21 +44,21 @@ in {
   systemd.services =
     (mkGoatCounterService {
       name = "jg";
-      port = 8080;
-      domain = "jg.example.com";
-      dbPath = "/var/lib/goatcounter/jg.db";
+      port = 8081;
+      workDir = "/var/lib/goatcounter-jg";
+      dbPath = "/var/lib/goatcounter-jg/goatcounter.db";
     }) //
     (mkGoatCounterService {
       name = "dv";
-      port = 8081;
-      domain = "dv.example.com";
-      dbPath = "/var/lib/goatcounter/dv.db";
+      port = 8082;
+      workDir = "/var/lib/goatcounter-dv";
+      dbPath = "/var/lib/goatcounter-dv/goatcounter.db";
     }) //
     (mkGoatCounterService {
       name = "gv";
-      port = 8082;
-      domain = "gv.example.com";
-      dbPath = "/var/lib/goatcounter/gv.db";
+      port = 8083;
+      workDir = "/var/lib/goatcounter-gv";
+      dbPath = "/var/lib/goatcounter-gv/goatcounter.db";
     });
 
   # Include goatcounter in system packages
