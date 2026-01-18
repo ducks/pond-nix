@@ -66,6 +66,13 @@ in {
       name = "scrob";
       ensureDBOwnership = true;
     }];
+    # Enable password authentication for scrob user
+    authentication = pkgs.lib.mkOverride 10 ''
+      local all all trust
+      host scrob scrob 127.0.0.1/32 md5
+      host all all 127.0.0.1/32 ident
+      host all all ::1/128 ident
+    '';
   };
 
   # Scrob systemd service
@@ -75,9 +82,9 @@ in {
     wantedBy = [ "multi-user.target" ];
 
     environment = {
-      DATABASE_URL = "postgres://scrob@localhost/scrob";
-      HOST = "127.0.0.1";
-      PORT = "3000";
+      DATABASE_URL = "postgres://scrob:scrob@localhost:5432/scrob";
+      HOST = "0.0.0.0";
+      PORT = "3002";
       RUST_LOG = "scrob=info";
     };
 
@@ -85,21 +92,17 @@ in {
       Type = "simple";
       User = "scrob";
       Group = "scrob";
-      ExecStart = "${scrob}/bin/scrob";
-      Restart = "on-failure";
-      RestartSec = "5s";
       WorkingDirectory = "/var/lib/scrob";
-
-      # Security hardening
-      NoNewPrivileges = true;
-      PrivateTmp = true;
-      ProtectSystem = "strict";
-      ProtectHome = true;
-      ReadWritePaths = [ "/var/lib/scrob" ];
+      ExecStart = "${scrob}/bin/scrob";
+      Restart = "always";
+      RestartSec = "5";
     };
 
-    # Run migrations before starting
+    # Set password and run migrations before starting
     preStart = ''
+      # Set scrob user password in PostgreSQL
+      ${config.services.postgresql.package}/bin/psql -U postgres -c "ALTER USER scrob WITH PASSWORD 'scrob';" || true
+      # Run migrations
       ${scrob}/bin/scrob migrate || true
     '';
   };
