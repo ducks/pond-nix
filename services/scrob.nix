@@ -1,51 +1,24 @@
 { config, pkgs, ... }:
 
 let
-  # Option 1: Build from source
-  scrob = pkgs.rustPlatform.buildRustPackage rec {
+  # Use pre-built binary from GitHub releases
+  scrob = pkgs.stdenv.mkDerivation rec {
     pname = "scrob";
     version = "20260114.0.0";
 
-    src = pkgs.fetchFromGitHub {
-      owner = "ducks";
-      repo = "scrob";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Replace with actual hash
+    src = pkgs.fetchurl {
+      url = "https://github.com/ducks/scrob/releases/download/v${version}/scrob-linux-x86_64";
+      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
     };
 
-    cargoHash = "sha256-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB="; # Replace with actual hash
+    dontUnpack = true;
 
-    nativeBuildInputs = with pkgs; [
-      pkg-config
-    ];
-
-    buildInputs = with pkgs; [
-      openssl
-      postgresql
-    ];
-
-    # Skip tests during build
-    doCheck = false;
+    installPhase = ''
+      mkdir -p $out/bin
+      cp $src $out/bin/scrob
+      chmod +x $out/bin/scrob
+    '';
   };
-
-  # Option 2: Download pre-built binary
-  # scrob = pkgs.stdenv.mkDerivation rec {
-  #   pname = "scrob";
-  #   version = "20260114.0.0";
-  #
-  #   src = pkgs.fetchurl {
-  #     url = "https://github.com/ducks/scrob/releases/download/v${version}/scrob-linux-x86_64";
-  #     hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-  #   };
-  #
-  #   phases = [ "installPhase" ];
-  #
-  #   installPhase = ''
-  #     mkdir -p $out/bin
-  #     cp $src $out/bin/scrob
-  #     chmod +x $out/bin/scrob
-  #   '';
-  # };
 
 in {
   # Create scrob user
