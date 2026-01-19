@@ -13,19 +13,19 @@
 
       "stats.jakegoldsborough.com" = {
         extraConfig = ''
-          reverse_proxy localhost:8080
+          reverse_proxy localhost:8081
         '';
       };
 
       "stats.date-ver.com" = {
         extraConfig = ''
-          reverse_proxy localhost:8081
+          reverse_proxy localhost:8082
         '';
       };
 
       "stats.gnarlyvoid.com" = {
         extraConfig = ''
-          reverse_proxy localhost:8082
+          reverse_proxy localhost:8083
         '';
       };
 
