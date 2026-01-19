@@ -43,7 +43,10 @@
 
       "ui.scrob.jakegoldsborough.com" = {
         extraConfig = ''
-          reverse_proxy localhost:3000
+          root * /var/www/scrob-ui
+          file_server
+          try_files {path} /index.html
+          encode gzip
         '';
       };
     };

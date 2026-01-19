@@ -8,6 +8,7 @@
     ./services/goatcounter.nix
     ./services/woodpecker.nix
     ./services/scrob.nix
+    ./services/scrob-ui.nix
     ./services/caddy.nix
   ];
 
