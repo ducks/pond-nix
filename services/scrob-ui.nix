@@ -26,6 +26,7 @@ in {
 
   # Copy scrob-ui files to /var/www/scrob-ui on activation
   system.activationScripts.scrob-ui = ''
+    mkdir -p /var/www/scrob-ui
     rm -rf /var/www/scrob-ui/*
     cp -r ${scrob-ui}/* /var/www/scrob-ui/
     chown -R caddy:caddy /var/www/scrob-ui
