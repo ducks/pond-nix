@@ -9,6 +9,7 @@
     ./services/woodpecker.nix
     ./services/scrob.nix
     ./services/scrob-ui.nix
+    ./services/cfgs-dev.nix
     ./services/caddy.nix
   ];
 

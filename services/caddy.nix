@@ -49,6 +49,12 @@
           encode gzip
         '';
       };
+
+      "cfgs.dev" = {
+        extraConfig = ''
+          reverse_proxy localhost:3003
+        '';
+      };
     };
 
     # Caddy automatically:
