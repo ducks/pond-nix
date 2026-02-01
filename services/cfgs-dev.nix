@@ -1,20 +1,23 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   # Fetch pre-built cfgs.dev from GitHub releases
   cfgs-dev = pkgs.stdenv.mkDerivation rec {
     pname = "cfgs-dev";
-    version = "20260124";
+    version = "20260201.0.0";
 
     src = pkgs.fetchzip {
       url = "https://github.com/ducks/cfgs.dev/releases/download/${version}/cfgs-dev.tar.gz";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # Update after first release
+      hash = "sha256-13xq3biijhcnfvi5iqf231rb19vzab67fjm8i29hhn4w067gvf5c";
       stripRoot = false;
     };
 
     installPhase = ''
       mkdir -p $out
-      cp -r * $out/
+      cp -r .next/standalone/* $out/
+      mkdir -p $out/.next/static
+      cp -r .next/static/* $out/.next/static/
+      cp -r public $out/public
     '';
   };
 
