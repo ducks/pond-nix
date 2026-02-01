@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 let
-  # Fetch pre-built cfgs.dev from GitHub releases
   cfgs-dev = pkgs.stdenv.mkDerivation rec {
     pname = "cfgs-dev";
     version = "20260201.0.0";
@@ -19,7 +18,6 @@ let
   };
 
 in {
-  # Create user for cfgs.dev service
   users.users.cfgs-dev = {
     isSystemUser = true;
     group = "cfgs-dev";
@@ -29,13 +27,11 @@ in {
 
   users.groups.cfgs-dev = {};
 
-  # Create data directory for SQLite database
   systemd.tmpfiles.rules = [
     "d /var/lib/cfgs-dev 0755 cfgs-dev cfgs-dev -"
     "d /var/lib/cfgs-dev/data 0755 cfgs-dev cfgs-dev -"
   ];
 
-  # cfgs.dev systemd service
   systemd.services.cfgs-dev = {
     description = "cfgs.dev - Developer dotfiles discovery";
     after = [ "network.target" ];
@@ -45,7 +41,7 @@ in {
       Type = "simple";
       User = "cfgs-dev";
       Group = "cfgs-dev";
-      WorkingDirectory = cfgs-dev;
+      WorkingDirectory = "${cfgs-dev}";
       ExecStart = "${pkgs.nodejs_22}/bin/node ${cfgs-dev}/.next/standalone/server.js";
       Restart = "on-failure";
       RestartSec = "10s";
