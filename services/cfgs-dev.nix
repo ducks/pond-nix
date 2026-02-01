@@ -45,22 +45,19 @@ in {
       Type = "simple";
       User = "cfgs-dev";
       Group = "cfgs-dev";
-      WorkingDirectory = "${cfgs-dev}";
+      WorkingDirectory = cfgs-dev;
       ExecStart = "${pkgs.nodejs_22}/bin/node ${cfgs-dev}/.next/standalone/server.js";
       Restart = "on-failure";
       RestartSec = "10s";
 
-      # Environment variables
       Environment = [
         "NODE_ENV=production"
         "PORT=3003"
         "HOSTNAME=0.0.0.0"
       ];
 
-      # Load secrets from environment file
       EnvironmentFile = "/var/lib/cfgs-dev/secrets.env";
 
-      # Security hardening
       NoNewPrivileges = true;
       PrivateTmp = true;
       ProtectSystem = "strict";
