@@ -14,9 +14,12 @@ let
 
     installPhase = ''
       mkdir -p $out
+      # Copy standalone server
       cp -r .next/standalone/* $out/
-      mkdir -p $out/.next/static
-      cp -r .next/static/* $out/.next/static/
+      # Copy static assets
+      mkdir -p $out/.next
+      cp -r .next/static $out/.next/static
+      # Copy public assets
       cp -r public $out/public
     '';
   };
