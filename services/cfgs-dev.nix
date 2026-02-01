@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 let
   # Fetch pre-built cfgs.dev from GitHub releases
