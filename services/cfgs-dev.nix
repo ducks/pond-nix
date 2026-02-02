@@ -26,4 +26,16 @@ in {
   };
 
   users.groups.cfgs-dev = {};
+
+  systemd.tmpfiles.rules = [
+    "d /var/lib/cfgs-dev 0755 cfgs-dev cfgs-dev -"
+    "d /var/lib/cfgs-dev/app 0755 cfgs-dev cfgs-dev -"
+  ];
+
+  system.activationScripts.cfgs-dev = ''
+    mkdir -p /var/lib/cfgs-dev/app
+    rm -rf /var/lib/cfgs-dev/app/*
+    cp -r ${cfgs-dev}/* /var/lib/cfgs-dev/app/
+    chown -R cfgs-dev:cfgs-dev /var/lib/cfgs-dev
+  '';
 }
