@@ -29,11 +29,18 @@ in {
 
   systemd.tmpfiles.rules = [
     "d /var/lib/cfgs-dev 0755 cfgs-dev cfgs-dev -"
-    "d /var/lib/cfgs-dev/data 0755 cfgs-dev cfgs-dev -"
+    "d /var/lib/cfgs-dev/app 0755 cfgs-dev cfgs-dev -"
   ];
 
+  system.activationScripts.cfgs-dev = ''
+    mkdir -p /var/lib/cfgs-dev/app
+    rm -rf /var/lib/cfgs-dev/app/*
+    cp -r ${cfgs-dev}/* /var/lib/cfgs-dev/app/
+    chown -R cfgs-dev:cfgs-dev /var/lib/cfgs-dev
+  '';
+
   systemd.services.cfgs-dev = {
-    description = "cfgs.dev - Developer dotfiles discovery";
+    description = "cfgs.dev";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
 
@@ -41,8 +48,8 @@ in {
       Type = "simple";
       User = "cfgs-dev";
       Group = "cfgs-dev";
-      WorkingDirectory = "${cfgs-dev}";
-      ExecStart = "${pkgs.nodejs_22}/bin/node ${cfgs-dev}/.next/standalone/server.js";
+      WorkingDirectory = "/var/lib/cfgs-dev/app/.next/standalone";
+      ExecStart = "${pkgs.nodejs_22}/bin/node /var/lib/cfgs-dev/app/.next/standalone/server.js";
       Restart = "on-failure";
       RestartSec = "10s";
 
@@ -53,12 +60,6 @@ in {
       ];
 
       EnvironmentFile = "/var/lib/cfgs-dev/secrets.env";
-
-      NoNewPrivileges = true;
-      PrivateTmp = true;
-      ProtectSystem = "strict";
-      ProtectHome = true;
-      ReadWritePaths = [ "/var/lib/cfgs-dev" ];
     };
   };
 }
