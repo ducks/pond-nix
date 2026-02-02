@@ -61,11 +61,13 @@ fi
 
 echo "Hash: sha256-${HASH}"
 
-# Update version in service file
+# Update URL and hash in service file
 echo "Updating ${SERVICE_FILE}..."
-sed -i "s|version = \"[^\"]*\"|version = \"${LATEST}\"|" "$SERVICE_FILE"
 
-# Update hash in service file
+# Update the URL (handles both version field and inline URL)
+sed -i "s|url = \"https://github.com/${GITHUB_REPO}/releases/download/[^/]*/|url = \"https://github.com/${GITHUB_REPO}/releases/download/${LATEST}/|" "$SERVICE_FILE"
+
+# Update hash
 sed -i "s|hash = \"sha256-[^\"]*\"|hash = \"sha256-${HASH}\"|" "$SERVICE_FILE"
 
 echo ""
