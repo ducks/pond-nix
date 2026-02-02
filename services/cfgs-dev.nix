@@ -25,7 +25,7 @@ in {
   system.activationScripts.cfgs-dev = ''
     mkdir -p /var/www/cfgs-dev
     rm -rf /var/www/cfgs-dev/*
-    cp -r ${cfgs-dev}/* /var/www/cfgs-dev/
+    cp -r ${cfgs-dev}/. /var/www/cfgs-dev/
     chown -R cfgs-dev:cfgs-dev /var/www/cfgs-dev
   '';
 
