@@ -2,8 +2,8 @@
 
 let
   cfgs-dev = pkgs.fetchzip {
-    url = "https://github.com/ducks/cfgs.dev/releases/download/20260203.0.0/cfgs-dev.tar.gz";
-    hash = "sha256-V/o2oXgIxU6m/+D0CB6nhUu4vV+Ec00kAiomIATHER8=";
+    url = "https://github.com/ducks/cfgs.dev/releases/download/20260203.0.1/cfgs-dev.tar.gz";
+    hash = "sha256-IZDuzKaBGpyYhiRp1HUixuk8eKDWi5bxptgeQTsetwE=";
     stripRoot = false;
   };
 
@@ -24,18 +24,13 @@ in {
 
   system.activationScripts.cfgs-dev = ''
     rm -rf /var/www/cfgs-dev
-    mkdir -p /var/www/cfgs-dev/.next/standalone/.next
-    mkdir -p /var/www/cfgs-dev/.next/standalone/public
-    mkdir -p /var/www/cfgs-dev/.next/standalone/data
+    mkdir -p /var/www/cfgs-dev
 
-    # Copy standalone app
-    cp -r ${cfgs-dev}/.next/standalone/. /var/www/cfgs-dev/.next/standalone/
+    # 20260203.0.1+ has everything in the right place already
+    cp -r ${cfgs-dev}/. /var/www/cfgs-dev/
 
-    # Copy static assets into standalone's .next directory
-    cp -r ${cfgs-dev}/.next/static /var/www/cfgs-dev/.next/standalone/.next/
-
-    # Copy public assets into standalone
-    cp -r ${cfgs-dev}/public/. /var/www/cfgs-dev/.next/standalone/public/
+    # Create writable data directory
+    mkdir -p /var/www/cfgs-dev/data
 
     chown -R cfgs-dev:cfgs-dev /var/www/cfgs-dev
   '';
@@ -51,8 +46,8 @@ in {
       Type = "simple";
       User = "cfgs-dev";
       Group = "cfgs-dev";
-      WorkingDirectory = "/var/www/cfgs-dev/.next/standalone";
-      ExecStart = "${pkgs.nodejs_22}/bin/node /var/www/cfgs-dev/.next/standalone/server.js";
+      WorkingDirectory = "/var/www/cfgs-dev";
+      ExecStart = "${pkgs.nodejs_22}/bin/node /var/www/cfgs-dev/server.js";
       Restart = "on-failure";
       RestartSec = "10s";
 
