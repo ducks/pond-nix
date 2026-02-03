@@ -2,8 +2,8 @@
 
 let
   cfgs-dev = pkgs.fetchzip {
-    url = "https://github.com/ducks/cfgs.dev/releases/download/20260203.0.3/cfgs-dev.tar.gz";
-    hash = "sha256-WSz5GeH5Uc9eqLBizzUo+F7jKoKjioDbtf3KsuwcyG8=";
+    url = "https://github.com/ducks/cfgs.dev/releases/download/20260203.0.4/cfgs-dev.tar.gz";
+    hash = "sha256-+mBErsSPqN4WJephdUPa6UwvXSd73Bqf21bcN6nWk/w=";
     stripRoot = false;
   };
 
