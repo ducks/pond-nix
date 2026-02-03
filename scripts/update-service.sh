@@ -68,8 +68,8 @@ echo "Updating ${SERVICE_FILE}..."
 # Update the URL (handles both version field and inline URL)
 sed -i "s|url = \"https://github.com/${GITHUB_REPO}/releases/download/[^/]*/|url = \"https://github.com/${GITHUB_REPO}/releases/download/${LATEST}/|" "$SERVICE_FILE"
 
-# Update hash
-sed -i "s|hash = \"sha256-[^\"]*\"|hash = \"sha256-${HASH}\"|" "$SERVICE_FILE"
+# Update hash (HASH already includes sha256- prefix from nix output)
+sed -i "s|hash = \"sha256-[^\"]*\"|hash = \"${HASH}\"|" "$SERVICE_FILE"
 
 echo ""
 echo "✓ Updated ${SERVICE_NAME} to version ${LATEST}"
