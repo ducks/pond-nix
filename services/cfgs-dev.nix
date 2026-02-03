@@ -23,16 +23,19 @@ in {
   ];
 
   system.activationScripts.cfgs-dev = ''
-    mkdir -p /var/www/cfgs-dev
-    rm -rf /var/www/cfgs-dev/*
-    cp -r ${cfgs-dev}/. /var/www/cfgs-dev/
-
-    # Copy static assets and public to standalone directory for Next.js
-    cp -r ${cfgs-dev}/.next/static /var/www/cfgs-dev/.next/standalone/.next/static
-    cp -r ${cfgs-dev}/public /var/www/cfgs-dev/.next/standalone/public
-
-    # Create writable data directory
+    rm -rf /var/www/cfgs-dev
+    mkdir -p /var/www/cfgs-dev/.next/standalone/.next
+    mkdir -p /var/www/cfgs-dev/.next/standalone/public
     mkdir -p /var/www/cfgs-dev/.next/standalone/data
+
+    # Copy standalone app
+    cp -r ${cfgs-dev}/.next/standalone/. /var/www/cfgs-dev/.next/standalone/
+
+    # Copy static assets into standalone's .next directory
+    cp -r ${cfgs-dev}/.next/static /var/www/cfgs-dev/.next/standalone/.next/
+
+    # Copy public assets into standalone
+    cp -r ${cfgs-dev}/public/. /var/www/cfgs-dev/.next/standalone/public/
 
     chown -R cfgs-dev:cfgs-dev /var/www/cfgs-dev
   '';
