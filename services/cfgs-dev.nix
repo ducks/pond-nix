@@ -19,6 +19,7 @@ in {
 
   systemd.tmpfiles.rules = [
     "d /var/lib/cfgs-dev 0755 cfgs-dev cfgs-dev -"
+    "d /var/lib/cfgs-dev/data 0755 cfgs-dev cfgs-dev -"
     "d /var/www/cfgs-dev 0755 cfgs-dev cfgs-dev -"
   ];
 
@@ -29,16 +30,19 @@ in {
     # 20260203.0.1+ has everything in the right place already
     cp -r ${cfgs-dev}/. /var/www/cfgs-dev/
 
-    # Create writable data directory
-    mkdir -p /var/www/cfgs-dev/data
+    # Symlink data directory to persistent storage
+    rm -rf /var/www/cfgs-dev/data
+    ln -sf /var/lib/cfgs-dev/data /var/www/cfgs-dev/data
 
     chown -R cfgs-dev:cfgs-dev /var/www/cfgs-dev
+    chown -R cfgs-dev:cfgs-dev /var/lib/cfgs-dev/data
   '';
 
   systemd.services.cfgs-dev = {
     description = "cfgs.dev";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
+    restartTriggers = [ cfgs-dev ];
 
     path = [ pkgs.git ];
 
