@@ -51,15 +51,16 @@ echo "Latest release: ${LATEST}"
 ARTIFACT_NAME=$(basename "$GITHUB_REPO" | tr '.' '-')
 URL="https://github.com/${GITHUB_REPO}/releases/download/${LATEST}/${ARTIFACT_NAME}.tar.gz"
 
-echo "Downloading and hashing: ${URL}"
-HASH=$(nix-prefetch-url --unpack "$URL" 2>/dev/null || echo "")
+echo "Calculating fetchzip hash for: ${URL}"
+# Use nix-build with fetchzip and fake hash to get real hash from error
+HASH=$(nix-build -E "with import <nixpkgs> {}; fetchzip { url = \"$URL\"; sha256 = \"0000000000000000000000000000000000000000000=\"; stripRoot = false; }" 2>&1 | grep -oP 'got:\s+\K.+' || echo "")
 
 if [ -z "$HASH" ]; then
   echo "Error: Could not fetch or hash tarball"
   exit 1
 fi
 
-echo "Hash: sha256-${HASH}"
+echo "Hash: ${HASH}"
 
 # Update URL and hash in service file
 echo "Updating ${SERVICE_FILE}..."
