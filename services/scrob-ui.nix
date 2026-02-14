@@ -7,8 +7,8 @@ let
     version = "20260114.0.0";
 
     src = pkgs.fetchzip {
-      url = "https://github.com/ducks/scrob-ui/releases/download/v${version}/scrob-ui-dist.tar.gz";
-      hash = "sha256-lICQZotqejZN0DfgfruzaPmrfBEOvFRy+/9PnppJ+N4=";
+      url = "https://github.com/ducks/scrob-ui/releases/download/v20260213.0.2/scrob-ui.tar.gz";
+      hash = "sha256-QWbZy070fGLnLN20V+BoQK7Iahogdwyys123pIAVgfg=";
       stripRoot = false;
     };
 
