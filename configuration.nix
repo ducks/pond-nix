@@ -10,6 +10,7 @@
     ./services/scrob.nix
     ./services/scrob-ui.nix
     ./services/cfgs-dev.nix
+    ./services/beanledger.nix
     ./services/caddy.nix
   ];
 
