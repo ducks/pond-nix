@@ -55,6 +55,12 @@
           reverse_proxy localhost:3003
         '';
       };
+
+      "beanledger.coffee" = {
+        extraConfig = ''
+          reverse_proxy localhost:3004
+        '';
+      };
     };
 
     # Caddy automatically:
