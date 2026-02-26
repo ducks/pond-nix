@@ -56,7 +56,7 @@
         '';
       };
 
-      "beanledger.pond.quest" = {
+      "beanledger.coffee" = {
         extraConfig = ''
           reverse_proxy localhost:3004
         '';

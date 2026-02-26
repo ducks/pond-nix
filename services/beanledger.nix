@@ -62,7 +62,7 @@ in {
       HOST = "0.0.0.0";
       PORT = "3004";
       NODE_ENV = "production";
-      ORIGIN = "https://beanledger.pond.quest";
+      ORIGIN = "https://beanledger.coffee";
     };
 
     serviceConfig = {
