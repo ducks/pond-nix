@@ -2,31 +2,10 @@
 
 let
   # Fetch pre-built beanledger from GitHub releases
-  # TODO: Update with actual release URL after first release
-  beanledger = pkgs.stdenv.mkDerivation rec {
-    pname = "beanledger";
-    version = "2026.02.24.0";
-
-    # For now, build from local source
-    # Later: fetch from GitHub releases
-    src = /home/urho/dev/beanledger;
-
-    buildInputs = [ pkgs.nodejs_20 pkgs.nodePackages.pnpm ];
-
-    buildPhase = ''
-      export HOME=$TMPDIR
-      pnpm install --frozen-lockfile
-      pnpm build
-    '';
-
-    installPhase = ''
-      mkdir -p $out
-      cp -r build $out/
-      cp -r node_modules $out/
-      cp package.json $out/
-      cp schema.sql $out/
-      cp seed.sql $out/
-    '';
+  beanledger = pkgs.fetchzip {
+    url = "https://github.com/ducks/beanledger/releases/download/v2026.02.27.0/beanledger.tar.gz";
+    hash = "sha256-hDNWSNJPqN+7519tuNtVvY7TJlPzLvYsk6VJ/ANPZMU=";
+    stripRoot = false;
   };
 
 in {
@@ -70,7 +49,7 @@ in {
       User = "beanledger";
       Group = "beanledger";
       WorkingDirectory = "${beanledger}";
-      ExecStart = "${pkgs.nodejs_20}/bin/node build";
+      ExecStart = "${pkgs.nodejs_22}/bin/node build";
       Restart = "always";
       RestartSec = "5";
     };
