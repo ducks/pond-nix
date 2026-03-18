@@ -15,6 +15,8 @@ let
         User = "goatcounter";
         Group = "goatcounter";
         WorkingDirectory = workDir;
+        # Run migrations before starting the server
+        ExecStartPre = "${goatcounter}/bin/goatcounter db migrate all -db sqlite+${dbPath}";
         ExecStart = "${goatcounter}/bin/goatcounter serve -listen localhost:${toString port} -tls none -db sqlite+${dbPath}";
         Restart = "always";
         Environment = "HOME=${workDir}";
