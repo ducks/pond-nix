@@ -3,8 +3,8 @@
 let
   # Fetch pre-built beanledger from GitHub releases
   beanledger = pkgs.fetchzip {
-    url = "https://github.com/ducks/beanledger/releases/download/v2026.03.17.0/beanledger.tar.gz";
-    hash = "sha256-28LW/TJoVU3z2sSMlriapH8WFP5mrNhrbJ65xc5hNBg=";
+    url = "https://github.com/ducks/beanledger/releases/download/v2026.03.18.0/beanledger.tar.gz";
+    hash = "sha256-AHlteKxuWbRoXukcJ+izXbQgvcurNmHMBIJmEJRsvEg=";
     stripRoot = false;
   };
 
