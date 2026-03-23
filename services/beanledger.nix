@@ -54,16 +54,11 @@ in {
       RestartSec = "5";
     };
 
-    # Initialize database before starting
+    # Run migrations before starting
     preStart = ''
-      # Check if tables exist, if not initialize
-      TABLE_COUNT=$(${config.services.postgresql.package}/bin/psql -U beanledger -d beanledger -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public';" 2>/dev/null | tr -d ' ' || echo "0")
-
-      if [ "$TABLE_COUNT" = "0" ]; then
-        echo "Initializing database schema..."
-        ${config.services.postgresql.package}/bin/psql -U beanledger -d beanledger -f ${beanledger}/schema.sql
-        ${config.services.postgresql.package}/bin/psql -U beanledger -d beanledger -f ${beanledger}/seed.sql
-      fi
+      echo "Running database migrations..."
+      cd ${beanledger}
+      ${pkgs.nodejs_22}/bin/node scripts/migrate.js
     '';
   };
 
