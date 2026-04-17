@@ -3,8 +3,8 @@
 let
   # Fetch pre-built curbside from GitHub releases
   curbside = pkgs.fetchzip {
-    url = "https://github.com/ducks/isitreal.estate/releases/download/v2026.04.17.0/curbside.tar.gz";
-    hash = "";  # TODO: update after first release build
+    url = "https://github.com/ducks/isitreal.estate/releases/download/v2026.04.17.2/curbside.tar.gz";
+    hash = "sha256-19haTMGXMwUMwC77Lz2TOgykyeuxyPFSam98kTFtLzY=";  # TODO: update after first release build
     stripRoot = false;
   };
 
