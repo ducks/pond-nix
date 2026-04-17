@@ -11,6 +11,7 @@
     ./services/scrob-ui.nix
     ./services/cfgs-dev.nix
     ./services/beanledger.nix
+    ./services/curbside.nix
     ./services/caddy.nix
   ];
 
