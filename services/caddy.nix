@@ -61,6 +61,12 @@
           reverse_proxy localhost:3004
         '';
       };
+
+      "isitreal.estate" = {
+        extraConfig = ''
+          reverse_proxy localhost:3005
+        '';
+      };
     };
 
     # Caddy automatically:
