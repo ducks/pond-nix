@@ -47,6 +47,7 @@ in {
       PORT = "3005";
       NODE_ENV = "production";
       ORIGIN = "https://isitreal.estate";
+      UPLOAD_DIR = "/var/lib/curbside/uploads";
     };
 
     serviceConfig = {
@@ -57,9 +58,6 @@ in {
       ExecStart = "${pkgs.nodejs_22}/bin/node build";
       Restart = "always";
       RestartSec = "5";
-
-      # Bind the uploads directory into the working directory
-      BindPaths = "/var/lib/curbside/uploads:${curbside}/uploads";
     };
 
     # Run migrations before starting
