@@ -66,7 +66,7 @@ echo "Hash: ${HASH}"
 echo "Updating ${SERVICE_FILE}..."
 
 # Update the URL (handles both version field and inline URL)
-sed -i "s|url = \"https://github.com/${GITHUB_REPO}/releases/download/[^/]*/|url = \"https://github.com/${GITHUB_REPO}/releases/download/${LATEST}/|" "$SERVICE_FILE"
+sed -i "s|url = \"https://github.com/${GITHUB_REPO}/releases/download/[^\"]*\"|url = \"https://github.com/${GITHUB_REPO}/releases/download/${LATEST}/${ARTIFACT_NAME}.tar.gz\"|" "$SERVICE_FILE"
 
 # Update hash (HASH already includes sha256- prefix from nix output)
 # Handles both existing hashes (sha256-...) and empty placeholders ("")
