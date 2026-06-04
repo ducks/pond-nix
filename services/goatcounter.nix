@@ -3,40 +3,27 @@
 let
   goatcounter = pkgs.goatcounter;
 
-  # Idempotently provisions a goatcounter instance on startup:
+  # Helper to create a GoatCounter instance. ExecStartPre runs the
+  # schema migration (with -createdb so a brand-new instance gets
+  # the DB file too); the site row itself is *not* provisioned here.
   #
-  #   1. Runs schema migrations (always safe, no-op when current).
-  #   2. Creates the site row for `vhost` if it doesn't already
-  #      exist. We can't just call `db create site` unconditionally
-  #      because it errors on duplicate rows; we check the sites
-  #      table first and only create when missing. This is what
-  #      makes the module zero-touch - no manual `goatcounter db
-  #      create site` after the first deploy.
+  # `goatcounter db create site` requires an admin user and password
+  # in the same call, and the password prompt is interactive - it
+  # can't run from systemd without a TTY. We tried storing an auto-
+  # generated password in a 0600 file but didn't love the plaintext
+  # secret pattern for a one-off, so the site-creation step stays
+  # manual. On a new instance:
   #
-  # The admin email follows a plus-addressed convention against
-  # pancakes.email (goatcounter-<name>@pancakes.email) so each site
-  # has a unique routable contact without per-instance config.
-  mkProvisionScript = { name, dbPath, vhost }: pkgs.writeShellScript "goatcounter-provision-${name}" ''
-    set -euo pipefail
-    ${goatcounter}/bin/goatcounter db migrate all -createdb -db sqlite+${dbPath}
-
-    if ! ${pkgs.sqlite}/bin/sqlite3 ${dbPath} \
-      "select 1 from sites where lower(cname) = lower('${vhost}') limit 1;" \
-      | grep -q 1; then
-      ${goatcounter}/bin/goatcounter db create site \
-        -db sqlite+${dbPath} \
-        -vhost ${vhost} \
-        -user.email goatcounter-${name}@pancakes.email
-    fi
-  '';
-
-  # Helper to create a GoatCounter instance. `vhost` is the public
-  # hostname the instance answers on (e.g. stats.jobl.dev) and is
-  # used both for the systemd-side site provisioning and as the key
-  # goatcounter looks up incoming requests by.
+  #   ssh pond
+  #   goatcounter db create site \
+  #     -db sqlite+/var/lib/goatcounter-<name>/goatcounter.db \
+  #     -vhost <vhost> \
+  #     -user.email goatcounter-<name>@pancakes.email
+  #
+  # Run once per new instance; survives reboots.
   mkGoatCounterService = { name, port, workDir, dbPath, vhost }: {
     "goatcounter-${name}" = {
-      description = "GoatCounter analytics (${name})";
+      description = "GoatCounter analytics (${name}, vhost ${vhost})";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
 
@@ -45,7 +32,7 @@ let
         User = "goatcounter";
         Group = "goatcounter";
         WorkingDirectory = workDir;
-        ExecStartPre = mkProvisionScript { inherit name dbPath vhost; };
+        ExecStartPre = "${goatcounter}/bin/goatcounter db migrate all -createdb -db sqlite+${dbPath}";
         ExecStart = "${goatcounter}/bin/goatcounter serve -listen localhost:${toString port} -tls none -db sqlite+${dbPath}";
         Restart = "always";
         Environment = "HOME=${workDir}";
