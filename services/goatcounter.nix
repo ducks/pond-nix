@@ -18,7 +18,7 @@ let
   # has a unique routable contact without per-instance config.
   mkProvisionScript = { name, dbPath, vhost }: pkgs.writeShellScript "goatcounter-provision-${name}" ''
     set -euo pipefail
-    ${goatcounter}/bin/goatcounter db migrate all -db sqlite+${dbPath}
+    ${goatcounter}/bin/goatcounter db migrate all -createdb -db sqlite+${dbPath}
 
     if ! ${pkgs.sqlite}/bin/sqlite3 ${dbPath} \
       "select 1 from sites where lower(cname) = lower('${vhost}') limit 1;" \
