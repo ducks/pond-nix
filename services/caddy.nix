@@ -29,6 +29,12 @@
         '';
       };
 
+      "stats.jobl.dev" = {
+        extraConfig = ''
+          reverse_proxy localhost:8084
+        '';
+      };
+
       "ci.jakegoldsborough.com" = {
         extraConfig = ''
           reverse_proxy localhost:8000

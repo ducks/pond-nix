@@ -91,6 +91,13 @@ in {
       workDir = "/var/lib/goatcounter-gv";
       dbPath = "/var/lib/goatcounter-gv/goatcounter.db";
       vhost = "stats.gnarlyvoid.com";
+    }) //
+    (mkGoatCounterService {
+      name = "jl";
+      port = 8084;
+      workDir = "/var/lib/goatcounter-jl";
+      dbPath = "/var/lib/goatcounter-jl/goatcounter.db";
+      vhost = "stats.jobl.dev";
     });
 
   # Include goatcounter in system packages
