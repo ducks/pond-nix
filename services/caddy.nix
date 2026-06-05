@@ -35,6 +35,17 @@
         '';
       };
 
+      # Same goatcounter instance as stats.jobl.dev, but a separate
+      # Host header so goatcounter buckets srg.jobl.dev hits into
+      # the `srg.jobl.dev` site row (cname-matched) instead of
+      # pooling them under `stats.jobl.dev`. srg.jobl.dev's tracking
+      # snippet points at /count here.
+      "stats.srg.jobl.dev" = {
+        extraConfig = ''
+          reverse_proxy localhost:8084
+        '';
+      };
+
       "ci.jakegoldsborough.com" = {
         extraConfig = ''
           reverse_proxy localhost:8000
