@@ -85,6 +85,30 @@ in {
       workDir = "/var/lib/goatcounter-jl";
       dbPath = "/var/lib/goatcounter-jl/goatcounter.db";
       vhost = "stats.jobl.dev";
+    }) //
+    # Single instance shared by the two .art sites (hausplants.art and
+    # birdhaus.art), the same way stats.jobl.dev / stats.srg.jobl.dev
+    # share instance `jl`. Caddy proxies both stats.* vhosts here and
+    # goatcounter buckets hits by Host header into separate cname-matched
+    # site rows. The two domains aren't subdomains of each other, so
+    # there's no accidental pooling to worry about. Provision BOTH rows
+    # once on the new instance (apex tracking):
+    #
+    #   ssh pond
+    #   goatcounter db create site \
+    #     -db sqlite+/var/lib/goatcounter-art/goatcounter.db \
+    #     -vhost hausplants.art \
+    #     -user.email goatcounter-art@pancakes.email
+    #   goatcounter db create site \
+    #     -db sqlite+/var/lib/goatcounter-art/goatcounter.db \
+    #     -vhost birdhaus.art \
+    #     -user.email goatcounter-art@pancakes.email
+    (mkGoatCounterService {
+      name = "art";
+      port = 8085;
+      workDir = "/var/lib/goatcounter-art";
+      dbPath = "/var/lib/goatcounter-art/goatcounter.db";
+      vhost = "stats.hausplants.art";
     });
 
   # Include goatcounter in system packages

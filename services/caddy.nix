@@ -46,6 +46,21 @@
         '';
       };
 
+      # hausplants.art and birdhaus.art share one goatcounter instance
+      # (port 8085); goatcounter splits them into per-domain site rows
+      # by Host header, same pattern as stats.jobl.dev / stats.srg.jobl.dev.
+      "stats.hausplants.art" = {
+        extraConfig = ''
+          reverse_proxy localhost:8085
+        '';
+      };
+
+      "stats.birdhaus.art" = {
+        extraConfig = ''
+          reverse_proxy localhost:8085
+        '';
+      };
+
       "ci.jakegoldsborough.com" = {
         extraConfig = ''
           reverse_proxy localhost:8000
