@@ -31,6 +31,9 @@
     };
   };
 
-  # Docker for Woodpecker agent
+  # Docker for Woodpecker agent. Pin to docker_29: the default (docker_28)
+  # is EOL since Nov 2025 and nixpkgs marks it insecure, which fails the
+  # build.
   virtualisation.docker.enable = true;
+  virtualisation.docker.package = pkgs.docker_29;
 }
