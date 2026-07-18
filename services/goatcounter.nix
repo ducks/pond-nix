@@ -91,18 +91,27 @@ in {
     # share instance `jl`. Caddy proxies both stats.* vhosts here and
     # goatcounter buckets hits by Host header into separate cname-matched
     # site rows. The two domains aren't subdomains of each other, so
-    # there's no accidental pooling to worry about. Provision BOTH rows
-    # once on the new instance (apex tracking):
+    # there's no accidental pooling to worry about.
+    #
+    # Each site row's -vhost MUST match the Host the tracking snippet
+    # sends, which is the stats.* subdomain (data-goatcounter points at
+    # https://stats.<domain>/count, and that's the Caddy vhost) - NOT the
+    # apex. Provisioning the apex gives "error 400: no site at this domain"
+    # on every hit. Run as the goatcounter user (the db is owned by it, so
+    # your own shell hits "attempt to write a readonly database"); the
+    # -password prompt is interactive so this needs a real TTY. Provision
+    # BOTH rows once on a new instance:
     #
     #   ssh pond
-    #   goatcounter db create site \
+    #   sudo -u goatcounter goatcounter db create site \
     #     -db sqlite+/var/lib/goatcounter-art/goatcounter.db \
-    #     -vhost hausplants.art \
+    #     -vhost stats.hausplants.art \
     #     -user.email goatcounter-art@pancakes.email
-    #   goatcounter db create site \
+    #   sudo -u goatcounter goatcounter db create site \
     #     -db sqlite+/var/lib/goatcounter-art/goatcounter.db \
-    #     -vhost birdhaus.art \
+    #     -vhost stats.birdhaus.art \
     #     -user.email goatcounter-art@pancakes.email
+    #   sudo systemctl restart goatcounter-art   # refresh the site cache
     (mkGoatCounterService {
       name = "art";
       port = 8085;
