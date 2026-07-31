@@ -12,6 +12,7 @@
     ./services/cfgs-dev.nix
     ./services/beanledger.nix
     ./services/curbside.nix
+    ./services/schrodingers-life.nix
     ./services/caddy.nix
   ];
 
