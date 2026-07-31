@@ -99,6 +99,19 @@
           reverse_proxy localhost:3005
         '';
       };
+
+      "schrodingers.life" = {
+        extraConfig = ''
+          encode zstd gzip
+          reverse_proxy localhost:3006
+
+          header {
+            X-Content-Type-Options nosniff
+            Referrer-Policy no-referrer
+            X-Frame-Options DENY
+          }
+        '';
+      };
     };
 
     # Caddy automatically:
