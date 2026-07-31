@@ -1,20 +1,23 @@
 { pkgs, ... }:
 
 let
-  schrodingers-life-src = pkgs.fetchFromGitHub {
-    owner = "ducks";
-    repo = "schrodingers-life";
-    rev = "c27530e5cf61ee97cf599405ec8f442aa981b162";
-    hash = "sha256-3H+7Z/a0d4wcPqe3dOJHiwOq/gJ3c0Okl8d7GP5Zgi0=";
-  };
-
-  schrodingers-life = pkgs.rustPlatform.buildRustPackage {
+  schrodingers-life = pkgs.stdenv.mkDerivation {
     pname = "schrodingers-life";
-    version = "0.1.0";
+    version = "20260730.0.0";
 
-    src = schrodingers-life-src;
+    src = pkgs.fetchurl {
+      url = "https://github.com/ducks/schrodingers-life/releases/download/v20260730.0.0/schrodingers-life-linux-x86_64";
+      hash = "sha256-ApQPWUxFkTsubUqDxYwE4rIFvLykArbZEEJzDdTFih4=";
+    };
 
-    cargoLock.lockFile = "${schrodingers-life-src}/Cargo.lock";
+    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+
+    dontUnpack = true;
+
+    installPhase = ''
+      install -Dm755 "$src" "$out/bin/schrodingers-life"
+    '';
   };
 in
 {
