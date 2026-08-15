@@ -17,7 +17,7 @@ let
     src = pkgs.fetchzip {
       url = "https://github.com/ducks/albo/releases/download/v20260815.0.1/albo.tar.gz";
       # Bumped automatically by scripts/update-service.sh.
-      hash = "sha256-hGpXZAGZWJulEnARlxIPgjf/AdYjf/sAgtLc1lQKVrs=";
+      hash = "sha256-3hmq/Irg3CHKen9/OcUHrAPoyJtKDzF6i+TAJofAiX4=";
       stripRoot = false;
     };
 
