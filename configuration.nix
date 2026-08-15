@@ -13,6 +13,7 @@
     ./services/beanledger.nix
     ./services/curbside.nix
     ./services/schrodingers-life.nix
+    ./services/albo.nix
     ./services/caddy.nix
   ];
 

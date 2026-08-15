@@ -11,6 +11,13 @@
         '';
       };
 
+      # albo curated directory (see services/albo.nix)
+      "albo.jakegoldsborough.com" = {
+        extraConfig = ''
+          reverse_proxy localhost:3010
+        '';
+      };
+
       "stats.jakegoldsborough.com" = {
         extraConfig = ''
           reverse_proxy localhost:8081
