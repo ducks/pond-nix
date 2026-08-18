@@ -5,11 +5,29 @@
 # packaged as albo.tar.gz. Update the pin with:
 #   ./scripts/update-service.sh albo ducks/albo
 #
-# One-time setup on a fresh deploy (state lives outside the Nix store):
-#   sudo -u albo /nix/store/.../bin/albo --config /var/lib/albo/directory.toml admin-add <user>
-#   (place /var/lib/albo/directory.toml first - see the example in the repo)
+# The instance config (branding, taxonomy, bind, db path) is managed here
+# in Nix - version-controlled and immutable. Mutable state (the SQLite db and
+# avatars/) lives in /var/lib/albo, referenced by absolute path from the
+# config. On a fresh deploy the only manual step is creating the first admin:
+#   sudo -u albo /nix/store/.../bin/albo --config <config> admin-add <user>
 
 let
+  # Instance config. Edit here and redeploy; no on-server file to hand-edit.
+  directoryToml = pkgs.writeText "albo-directory.toml" ''
+    [directory]
+    name = "Portland Tattooer's Directory"
+    entity = "tattooer"
+    entities = "tattooers"
+    tagline = "Portland tattooers, curated"
+
+    [tags]
+    available = ["traditional", "fine line", "blackwork", "color", "realism", "flash"]
+
+    [server]
+    bind = "127.0.0.1:3010"
+    database = "/var/lib/albo/albo.db"
+  '';
+
   albo = pkgs.stdenv.mkDerivation {
     pname = "albo";
     version = "20260815.0.1";
@@ -42,7 +60,7 @@ in
     description = "albo curated directory";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
-    restartTriggers = [ albo ];
+    restartTriggers = [ albo directoryToml ];
 
     serviceConfig = {
       Type = "simple";
@@ -50,8 +68,9 @@ in
       Group = "albo";
       WorkingDirectory = "/var/lib/albo";
       StateDirectory = "albo";
-      # Config + db + avatars/ all live in the state dir; no secrets in Nix.
-      ExecStart = "${albo}/bin/albo --config /var/lib/albo/directory.toml serve";
+      # Config is Nix-managed (immutable store path); db + avatars/ are the
+      # mutable state, referenced by absolute path from the config.
+      ExecStart = "${albo}/bin/albo --config ${directoryToml} serve";
       Restart = "on-failure";
       RestartSec = "2s";
 
