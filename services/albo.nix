@@ -15,9 +15,9 @@ let
     version = "20260815.0.1";
 
     src = pkgs.fetchzip {
-      url = "https://github.com/ducks/albo/releases/download/v20260817.0.0/albo.tar.gz";
+      url = "https://github.com/ducks/albo/releases/download/v20260818.0.0/albo.tar.gz";
       # Bumped automatically by scripts/update-service.sh.
-      hash = "sha256-jbJfY0igRLRtRLuPq0srYtLHoQ46fOIHP2MdkfLrB1Y=";
+      hash = "sha256-GNVmV2i72OYaFhqKLh4Gq24U4DmvhbQ8e6HzIsbEH1o=";
       stripRoot = false;
     };
 
