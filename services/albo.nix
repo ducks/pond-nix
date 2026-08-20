@@ -19,6 +19,7 @@ let
     entity = "tattooer"
     entities = "tattooers"
     tagline = "Portland tattooers, curated"
+    base_url = "https://albo.jakegoldsborough.com"
 
     [tags]
     available = ["traditional", "fine line", "blackwork", "color", "realism", "flash"]
