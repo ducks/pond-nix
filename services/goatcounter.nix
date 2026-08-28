@@ -86,6 +86,13 @@ in {
       dbPath = "/var/lib/goatcounter-jl/goatcounter.db";
       vhost = "stats.jobl.dev";
     }) //
+    (mkGoatCounterService {
+      name = "rb";
+      port = 8086;
+      workDir = "/var/lib/goatcounter-rb";
+      dbPath = "/var/lib/goatcounter-rb/goatcounter.db";
+      vhost = "stats.replaybook.dev";
+    }) //
     # Single instance shared by the two .art sites (hausplants.art and
     # birdhaus.art), the same way stats.jobl.dev / stats.srg.jobl.dev
     # share instance `jl`. Caddy proxies both stats.* vhosts here and

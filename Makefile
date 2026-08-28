@@ -76,6 +76,8 @@ status: ## Show status of all services
 	@echo ""
 	@sudo systemctl status goatcounter-jg --no-pager -l || true
 	@echo ""
+	@sudo systemctl status goatcounter-rb --no-pager -l || true
+	@echo ""
 	@sudo systemctl status woodpecker-server --no-pager -l || true
 	@echo ""
 	@sudo systemctl status scrob --no-pager -l || true

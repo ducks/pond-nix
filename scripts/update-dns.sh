@@ -13,6 +13,7 @@ declare -A RECORDS=(
     ["jakegoldsborough.com"]="code,ci,stats,scrob,ui.scrob"
     ["date-ver.com"]="stats"
     ["gnarlyvoid.com"]="stats"
+    ["replaybook.dev"]="stats"
 )
 
 API_BASE="https://api.name.com/v4"
@@ -111,6 +112,7 @@ echo "  - scrob.jakegoldsborough.com"
 echo "  - ui.scrob.jakegoldsborough.com"
 echo "  - stats.date-ver.com"
 echo "  - stats.gnarlyvoid.com"
+echo "  - stats.replaybook.dev"
 echo ""
 echo "DNS propagation may take a few minutes."
 echo "Test with: dig code.jakegoldsborough.com +short"
