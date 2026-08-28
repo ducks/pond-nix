@@ -16,6 +16,10 @@ NixOS configuration for personal VPS infrastructure.
 - `services/` - Service-specific configurations
 - `secrets/` - Encrypted secrets (git-crypted)
 
+GoatCounter instances are declared once in
+`services/goatcounter-instances.nix`. The systemd services, Caddy routes, and
+`scripts/update-dns.sh` all consume that metadata.
+
 ## Deployment
 
 ```bash

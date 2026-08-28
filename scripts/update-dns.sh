@@ -8,12 +8,31 @@ set -e
 # New server IP
 NEW_IP="199.68.196.244"
 
-# Domains to update
+# Non-GoatCounter domains to update. GoatCounter records are derived from
+# services/goatcounter-instances.nix below so a new instance only needs one
+# service metadata entry.
 declare -A RECORDS=(
-    ["jakegoldsborough.com"]="code,ci,stats,scrob,ui.scrob"
-    ["date-ver.com"]="stats"
-    ["gnarlyvoid.com"]="stats"
-    ["replaybook.dev"]="stats"
+    ["jakegoldsborough.com"]="code,ci,scrob,ui.scrob"
+)
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+GOATCOUNTER_INSTANCES="${SCRIPT_DIR}/../services/goatcounter-instances.nix"
+
+if ! command -v nix-instantiate >/dev/null 2>&1; then
+    echo "Error: nix-instantiate is required to read ${GOATCOUNTER_INSTANCES}" >&2
+    exit 1
+fi
+
+while IFS=$'\t' read -r domain host; do
+    [ -n "$domain" ] || continue
+    if [ -n "${RECORDS[$domain]-}" ]; then
+        RECORDS[$domain]+=",${host}"
+    else
+        RECORDS[$domain]="$host"
+    fi
+done < <(
+    nix-instantiate --eval --json --strict "$GOATCOUNTER_INSTANCES" \
+      | jq -r '.[] | .dnsRecords[] | [.domain, .host] | @tsv'
 )
 
 API_BASE="https://api.name.com/v4"
@@ -113,6 +132,10 @@ echo "  - ui.scrob.jakegoldsborough.com"
 echo "  - stats.date-ver.com"
 echo "  - stats.gnarlyvoid.com"
 echo "  - stats.replaybook.dev"
+echo "  - stats.jobl.dev"
+echo "  - stats.srg.jobl.dev"
+echo "  - stats.hausplants.art"
+echo "  - stats.birdhaus.art"
 echo ""
 echo "DNS propagation may take a few minutes."
 echo "Test with: dig code.jakegoldsborough.com +short"
