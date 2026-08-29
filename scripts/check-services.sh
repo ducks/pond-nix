@@ -39,7 +39,7 @@ echo ""
 
 # If SSH works, check systemd service status
 echo "=== Checking systemd service status via SSH ==="
-ssh ducks@${POND_IP} 'sudo systemctl status goatcounter-jg goatcounter-dv goatcounter-gv gitea woodpecker-server scrob caddy --no-pager' 2>/dev/null | grep -E "Active:|●"
+ssh ducks@${POND_IP} 'sudo systemctl status goatcounter-jg goatcounter-dv goatcounter-gv goatcounter-rb gitea woodpecker-server scrob caddy --no-pager' 2>/dev/null | grep -E "Active:|●"
 echo ""
 
 # Check HTTP services by port
