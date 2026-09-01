@@ -43,6 +43,14 @@
     dnsRecords = [ { domain = "replaybook.dev"; host = "stats"; } ];
   }
   {
+    name = "azg";
+    port = 8087;
+    workDir = "/var/lib/goatcounter-azg";
+    dbPath = "/var/lib/goatcounter-azg/goatcounter.db";
+    vhosts = [ "stats.agentzen.garden" ];
+    dnsRecords = [ { domain = "agentzen.garden"; host = "stats"; } ];
+  }
+  {
     name = "art";
     port = 8085;
     workDir = "/var/lib/goatcounter-art";

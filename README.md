@@ -5,7 +5,7 @@ NixOS configuration for personal VPS infrastructure.
 ## Services
 
 - **Gitea** - Git hosting
-- **GoatCounter** - Analytics (jg, dv, gv, rb instances)
+- **GoatCounter** - Analytics (jg, dv, gv, rb, azg instances)
 - **Woodpecker CI** - CI/CD
 - **Scrob** - Music scrobbling server
 - **Caddy** - Web server / reverse proxy
@@ -50,6 +50,20 @@ sudo systemctl restart goatcounter-rb
 The command prompts for the dashboard password. Add the tracking snippet to
 the published site with `data-goatcounter="https://stats.replaybook.dev/count"`
 and `src="//stats.replaybook.dev/count.js"`.
+
+### Agent Zen Garden analytics
+
+Agent Zen Garden has its own GoatCounter instance at `stats.agentzen.garden`
+(port 8087 and database `/var/lib/goatcounter-azg/goatcounter.db`). After the
+DNS record and NixOS configuration are live, create the site row once:
+
+```bash
+sudo -u goatcounter goatcounter db create site \
+  -db sqlite+/var/lib/goatcounter-azg/goatcounter.db \
+  -vhost stats.agentzen.garden \
+  -user.email goatcounter-azg@pancakes.email
+sudo systemctl restart goatcounter-azg
+```
 
 ## Migration from burrow-systemd
 
