@@ -15,6 +15,7 @@
     ./services/schrodingers-life.nix
     ./services/albo.nix
     ./services/caddy.nix
+    ./services/backups.nix
   ];
 
   # System configuration
