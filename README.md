@@ -20,6 +20,49 @@ GoatCounter instances are declared once in
 `services/goatcounter-instances.nix`. The systemd services, Caddy routes, and
 `scripts/update-dns.sh` all consume that metadata.
 
+## Backups
+
+Two layers, both in `services/backups.nix`:
+
+1. `services.postgresqlBackup` dumps each database nightly at 02:30 to
+   `/var/backup/postgresql` (gitea, scrob, curbside, beanledger), one
+   file per database.
+2. `services.restic.backups.offsite` ships those dumps plus every stateful
+   `/var/lib` directory (Gitea repos, uploads, SQLite databases, Caddy
+   certificates) to an encrypted off-box restic repository at 03:30, keeping
+   14 daily, 8 weekly, and 12 monthly snapshots.
+
+The repository and credentials are not in this repo. Create them once on pond:
+
+```bash
+sudo install -d -m 0700 /var/lib/restic
+# Where the repository lives: any restic backend, e.g. Backblaze B2 or S3.
+echo 's3:s3.us-west-004.backblazeb2.com/pond-backups' | sudo tee /var/lib/restic/offsite.repository
+# Backend credentials, in environment form.
+sudo tee /var/lib/restic/offsite.env <<'EOF'
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+EOF
+# The encryption password. Lose this and the backups are gone; keep a copy
+# somewhere that is not pond.
+openssl rand -base64 32 | sudo tee /var/lib/restic/offsite.password
+sudo chmod 0600 /var/lib/restic/offsite.*
+sudo nixos-rebuild switch
+sudo systemctl start restic-backups-offsite   # first run initializes the repo
+```
+
+Check on it:
+
+```bash
+systemctl list-timers 'postgresqlBackup*' 'restic*'
+journalctl -u restic-backups-offsite -n 50
+cat /var/lib/restic/failures.log            # written by the on-failure hook
+sudo scripts/restore-drill.sh beanledger    # from a repo checkout; restores the latest dump into a scratch db
+```
+
+Run the restore drill after the first backup and then monthly. A backup
+that has never been restored is not a backup.
+
 ## Deployment
 
 ```bash
