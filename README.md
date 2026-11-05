@@ -111,3 +111,29 @@ sudo systemctl restart goatcounter-azg
 ## Migration from burrow-systemd
 
 This replaces the manual systemd setup with declarative NixOS configuration.
+
+### Crawler discovery experiment
+
+Caddy serves `crawl.jakegoldsborough.com` from `/var/www/crawltrap` and writes
+JSON access logs under `/var/log/crawltrap/`. This repository contains only the
+host configuration. Keep the generated site, destination names, phrases and
+manifest in a private location; do not commit them here. The directory under
+`/var/www` is public over HTTP, even if its source is private.
+
+Deploy site files separately, then apply the NixOS configuration. Ensure the
+files are readable by Caddy and record the UTC deployment time privately. Add
+blog links to the two entry pages only after logging is verified and record
+when and where those links appear. The site and manifest currently reside in
+`/home/urho/dev/crawltrap-private` on the development machine; back them up
+privately. The DNS A record points to pond.
+
+The log keeps the direct peer IP, request method, path, status, User-Agent and
+Referer. Headers, request query strings, response headers and client port are
+excluded. Referer and User-Agent are untrusted and may themselves contain
+personal or sensitive information; restrict log access, review before sharing,
+and avoid cookies and authorization data. The log directory is accessible only
+to Caddy and privileged users. Rotation keeps up to 14 files for up to 14 days
+once rolled; an active low-volume log may persist longer, so delete it on your
+chosen retention schedule. A proxy would change the meaning of the direct peer
+IP; forwarded headers are not trusted. Requests from local checks must be
+excluded from observations. Logs and reports must remain private.

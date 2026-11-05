@@ -15,10 +15,40 @@ let
 in
 
 {
+  systemd.tmpfiles.rules = [
+    "d /var/log/crawltrap 0700 caddy caddy -"
+    "d /var/www/crawltrap 0755 caddy caddy -"
+  ];
+
   services.caddy = {
     enable = true;
 
     virtualHosts = {
+      # Public experiment site; private access logs, with request data minimized.
+      "crawl.jakegoldsborough.com" = {
+        extraConfig = ''
+          root * /var/www/crawltrap
+          log_append experiment_path {http.request.uri.path}
+          log_append experiment_user_agent {http.request.header.User-Agent}
+          log_append experiment_referer {http.request.header.Referer}
+          log {
+            output file /var/log/crawltrap/access.jsonl {
+              roll_size 10MiB
+              roll_keep 14
+              roll_keep_for 336h
+            }
+            format filter {
+              request>uri delete
+              request>headers delete
+              request>remote_port delete
+              request>client_ip delete
+              resp_headers delete
+            }
+          }
+          file_server
+        '';
+      };
+
       "code.jakegoldsborough.com" = {
         extraConfig = ''
           reverse_proxy localhost:3001

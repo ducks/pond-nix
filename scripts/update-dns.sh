@@ -12,7 +12,7 @@ NEW_IP="199.68.196.244"
 # services/goatcounter-instances.nix below so a new instance only needs one
 # service metadata entry.
 declare -A RECORDS=(
-    ["jakegoldsborough.com"]="code,ci,scrob,ui.scrob"
+    ["jakegoldsborough.com"]="code,ci,scrob,ui.scrob,crawl"
 )
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
